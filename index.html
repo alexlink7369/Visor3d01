@@ -43,7 +43,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 14px 14px 0;
+  padding: 10px 12px 0;
   flex-shrink: 0;
 }
 
@@ -70,8 +70,8 @@
 #sidebar-content {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 12px 28px 32px;
+  gap: 8px;
+  padding: 8px 22px 20px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   flex: 1;
@@ -92,37 +92,28 @@
 
 #sidebar-name {
   font-family: Arial, sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   text-align: center;
   letter-spacing: 0.02em;
+  margin: 0;
 }
-#sidebar-badge {
-  display: inline-block;
-  margin: 0 auto;
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-align: center;
-}
+
 #sidebar-desc {
   font-family: Arial, sans-serif;
-  font-size: 0.9rem;
-  line-height: 1.65;
+  font-size: 0.88rem;
+  line-height: 1.6;
   color: rgba(255,255,255,0.75);
   border-top: 1px solid rgba(255,255,255,0.1);
-  padding-top: 14px;
-  margin-top: 4px;
+  padding-top: 10px;
+  margin-top: 0;
 }
 #sidebar-props {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-  padding-bottom: 24px;
+  gap: 6px;
+  margin-top: 0;
+  padding-bottom: 8px;
 }
 .prop-row {
   display: flex;
@@ -227,7 +218,6 @@ Cargando modelo...
   </div>
   <div id="sidebar-content">
     <h2 id="sidebar-name"></h2>
-    <div id="sidebar-badge"></div>
     <p id="sidebar-desc"></p>
     <div id="sidebar-props"></div>
   </div>
@@ -404,7 +394,6 @@ const datosObjetos = {
       { label: "Tipo",       value: "Sólido de revolución" },
       { label: "Caras",      value: "Infinitas (curva)" },
       { label: "Simetría",   value: "Total" },
-      { label: "Mesh",       value: "Sphere001" },
     ]
   },
   teapot: {
@@ -416,7 +405,6 @@ const datosObjetos = {
       { label: "Origen",     value: "Utah, 1975" },
       { label: "Autor",      value: "Martin Newell" },
       { label: "Tipo",       value: "Superficie NURBS" },
-      { label: "Mesh",       value: "Teapot001" },
     ]
   },
   box: {
@@ -428,7 +416,6 @@ const datosObjetos = {
       { label: "Tipo",       value: "Hexaedro regular" },
       { label: "Caras",      value: "6" },
       { label: "Vértices",   value: "8" },
-      { label: "Mesh",       value: "Box001" },
     ]
   },
 };
@@ -449,16 +436,11 @@ function abrirSidebar(objeto) {
 
   const sidebar  = document.getElementById("sidebar");
   const nameEl   = document.getElementById("sidebar-name");
-  const badgeEl  = document.getElementById("sidebar-badge");
   const descEl   = document.getElementById("sidebar-desc");
   const propsEl  = document.getElementById("sidebar-props");
 
   if (datos) {
     nameEl.textContent  = datos.nombre;
-    badgeEl.textContent = objeto.name;
-    badgeEl.style.background = datos.color + "33";
-    badgeEl.style.color       = datos.color;
-    badgeEl.style.border      = `1px solid ${datos.color}55`;
     descEl.textContent  = datos.descripcion;
     propsEl.innerHTML   = datos.propiedades.map(p =>
       `<div class="prop-row">
@@ -468,7 +450,6 @@ function abrirSidebar(objeto) {
     ).join("");
   } else {
     nameEl.textContent  = objeto.name || "Objeto";
-    badgeEl.textContent = "";
     descEl.textContent  = "Sin descripción disponible.";
     propsEl.innerHTML   = "";
   }
