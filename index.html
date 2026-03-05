@@ -31,27 +31,27 @@
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   color: white;
-  padding: 48px 28px 32px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
   transition: right 0.4s cubic-bezier(0.22,1,0.36,1);
   z-index: 5;
   border-left: 1px solid rgba(255,255,255,0.08);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
-
 #sidebar.open { right: 0; }
 
-#sidebar-close {
-  position: absolute;
-  top: 14px;
-  right: 16px;
+#sidebar-topbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 14px 0;
+  flex-shrink: 0;
+}
+
+#sidebar-toggle, #sidebar-close {
   background: rgba(255,255,255,0.08);
   border: none;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -59,17 +59,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.3s;
   touch-action: manipulation;
+  flex-shrink: 0;
 }
-#sidebar-close:hover, #sidebar-close:active { background: rgba(255,255,255,0.22); }
+#sidebar-toggle:hover,  #sidebar-toggle:active,
+#sidebar-close:hover,   #sidebar-close:active  { background: rgba(255,255,255,0.22); }
+#sidebar-toggle.collapsed { transform: rotate(180deg); }
+
+#sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px 28px 32px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1),
+              opacity    0.3s ease,
+              padding    0.3s ease;
+  max-height: 2000px;
+  opacity: 1;
+}
+#sidebar-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
 
 #sidebar-icon {
   font-size: 3rem;
   text-align: center;
   margin-bottom: 4px;
 }
-
 #sidebar-name {
   font-family: Arial, sans-serif;
   font-size: 1.5rem;
@@ -77,7 +101,6 @@
   text-align: center;
   letter-spacing: 0.02em;
 }
-
 #sidebar-badge {
   display: inline-block;
   margin: 0 auto;
@@ -89,7 +112,6 @@
   text-transform: uppercase;
   text-align: center;
 }
-
 #sidebar-desc {
   font-family: Arial, sans-serif;
   font-size: 0.9rem;
@@ -99,7 +121,6 @@
   padding-top: 14px;
   margin-top: 4px;
 }
-
 #sidebar-props {
   display: flex;
   flex-direction: column;
@@ -107,7 +128,6 @@
   margin-top: 4px;
   padding-bottom: 24px;
 }
-
 .prop-row {
   display: flex;
   justify-content: space-between;
@@ -119,42 +139,35 @@
   font-size: 0.82rem;
 }
 .prop-label { color: rgba(255,255,255,0.5); }
-.prop-value { font-weight: 600; color: white; }
+.prop-value  { font-weight: 600; color: white; }
 
-/* ── HUD responsivo ── */
-#hud {
-  pointer-events: none;
-}
+/* ── HUD ── */
+#hud { pointer-events: none; }
 #hud * { pointer-events: auto; }
 
-/* ── Mobile: sidebar sube desde abajo ── */
+/* ── Mobile: sheet desde abajo ── */
 @media (max-width: 600px) {
-
   #sidebar {
     top: auto;
     bottom: -100%;
     right: 0;
     left: 0;
     width: 100%;
-    height: 70%;
-    max-height: 72vh;
+    height: auto;
+    max-height: 80vh;
     border-left: none;
     border-top: 1px solid rgba(255,255,255,0.12);
     border-radius: 20px 20px 0 0;
-    padding: 40px 20px 32px;
     transition: bottom 0.4s cubic-bezier(0.22,1,0.36,1);
+    flex-direction: column;
   }
+  #sidebar.open  { bottom: 0; right: 0; }
 
-  #sidebar.open {
-    bottom: 0;
-    right: 0;
-  }
-
-  /* drag handle visual */
+  /* drag handle */
   #sidebar::before {
     content: '';
     position: absolute;
-    top: 10px;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
     width: 40px;
@@ -163,36 +176,37 @@
     border-radius: 2px;
   }
 
-  #sidebar-close {
-    top: 12px;
-    right: 14px;
-    width: 32px;
-    height: 32px;
+  #sidebar-topbar {
+    padding: 20px 14px 0;
   }
 
-  #sidebar-icon { font-size: 2.2rem; }
-  #sidebar-name { font-size: 1.25rem; }
+  /* en móvil el toggle rota al revés (abre hacia arriba) */
+  #sidebar-toggle         { transform: rotate(180deg); }
+  #sidebar-toggle.collapsed { transform: rotate(0deg); }
 
-  #sidebar-desc { font-size: 0.85rem; }
-
-  .prop-row { font-size: 0.78rem; }
-
-  /* HUD más compacto en móvil */
-  #title { font-size: 16px !important; }
-  #panel {
-    font-size: 13px !important;
-    padding: 10px 12px !important;
-    width: 180px !important;
+  #sidebar-content {
+    padding: 10px 20px 28px;
+    max-height: 60vh;
   }
+  #sidebar-content.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  #sidebar-icon  { font-size: 2.2rem; }
+  #sidebar-name  { font-size: 1.2rem; }
+  #sidebar-desc  { font-size: 0.85rem; }
+  .prop-row      { font-size: 0.78rem; }
+
+  #title  { font-size: 15px !important; }
+  #panel  { font-size: 12px !important; padding: 8px 12px !important; width: 160px !important; }
 }
 
 /* ── Tablet ── */
 @media (min-width: 601px) and (max-width: 900px) {
-  #sidebar {
-    width: 280px;
-    right: -300px;
-  }
-  #sidebar.open { right: 0; }
+  #sidebar       { width: 280px; right: -300px; }
+  #sidebar.open  { right: 0; }
 }
 </style>
 </head>
@@ -212,12 +226,17 @@ Cargando modelo...
 
 <!-- Panel lateral -->
 <div id="sidebar">
-  <button id="sidebar-close">✕</button>
-  <div id="sidebar-icon"></div>
-  <h2 id="sidebar-name"></h2>
-  <div id="sidebar-badge"></div>
-  <p id="sidebar-desc"></p>
-  <div id="sidebar-props"></div>
+  <div id="sidebar-topbar">
+    <button id="sidebar-toggle" title="Colapsar / Expandir">▼</button>
+    <button id="sidebar-close" title="Cerrar">✕</button>
+  </div>
+  <div id="sidebar-content">
+    <div id="sidebar-icon"></div>
+    <h2 id="sidebar-name"></h2>
+    <div id="sidebar-badge"></div>
+    <p id="sidebar-desc"></p>
+    <div id="sidebar-props"></div>
+  </div>
 </div>
 
 <script type="module">
@@ -466,22 +485,36 @@ function abrirSidebar(objeto) {
   sidebar.classList.add("open");
 }
 
+// ── Toggle colapsar / expandir ──────────────────────────────────
+document.getElementById("sidebar-toggle").addEventListener("click", () => {
+  const content = document.getElementById("sidebar-content");
+  const btn     = document.getElementById("sidebar-toggle");
+  content.classList.toggle("collapsed");
+  btn.classList.toggle("collapsed");
+});
+
+// ── Cerrar sidebar (sin deseleccionar objeto) ────────────────────
 document.getElementById("sidebar-close").addEventListener("click", () => {
   document.getElementById("sidebar").classList.remove("open");
-  // Deseleccionar — todos vuelven a opacidad normal
+  // El objeto sigue seleccionado — solo se oculta el panel
+});
+
+// ── Función global para deseleccionar ────────────────────────────
+function deseleccionar() {
   objetoSeleccionado = null;
+  document.getElementById("sidebar").classList.remove("open");
   objetos.forEach(o => {
     const mats = Array.isArray(o.material) ? o.material : [o.material];
     mats.forEach(m => {
       m.transparent = true;
-      m.opacity = 1.0;
-      m.depthWrite = true;
+      m.opacity     = 1.0;
+      m.depthWrite  = true;
       if (m.emissive) m.emissive.set(0x000000);
       m.needsUpdate = true;
     });
   });
   document.getElementById("panel").textContent = "Selecciona un objeto";
-});
+}
 
 function seleccionarObjeto(objeto){
 
@@ -539,14 +572,16 @@ if(intersects.length>0){
 
 });
 
-window.addEventListener("click",()=>{
+window.addEventListener("click", () => {
 
-raycaster.setFromCamera(mouse,camera);
+raycaster.setFromCamera(mouse, camera);
+const intersects = raycaster.intersectObjects(objetos);
 
-const intersects=raycaster.intersectObjects(objetos);
-
-if(intersects.length>0){
+if (intersects.length > 0) {
   seleccionarObjeto(intersects[0].object);
+} else {
+  // Clic en espacio vacío → deseleccionar
+  deseleccionar();
 }
 
 });
