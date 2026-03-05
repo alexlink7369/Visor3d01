@@ -1,55 +1,113 @@
-body{
-margin:0;
-overflow:hidden;
-font-family:Arial;
+* {
+  box-sizing: border-box;
 }
 
-#loading{
-position:absolute;
-width:100%;
-height:100%;
-background:black;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-z-index:10;
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  touch-action: none; /* evita scroll accidental en móvil al orbitar */
 }
 
-#hud{
-position:absolute;
-top:20px;
-left:20px;
-color:white;
+#loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 10;
 }
 
-#title{
-font-size:22px;
-margin-bottom:10px;
+#hud {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  color: white;
+  z-index: 4;
+  pointer-events: none;
 }
 
-#panel{
-background:rgba(0,0,0,0.7);
-padding:15px;
-border-radius:8px;
-width:220px;
+#hud * {
+  pointer-events: auto;
 }
 
-#labels{
-position:absolute;
-top:0;
-left:0;
-pointer-events:none;
+#title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
-.label{
-position:absolute;
-color:white;
-background:rgba(0,0,0,0.7);
-padding:5px 10px;
-border-radius:6px;
-font-size:12px;
-transform:translate(-50%,-50%);
-white-space:nowrap;
+#panel {
+  background: rgba(0,0,0,0.7);
+  padding: 12px 16px;
+  border-radius: 8px;
+  width: 220px;
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.label {
+  position: absolute;
+  color: white;
+  background: rgba(0,0,0,0.65);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ── Tablet ── */
+@media (max-width: 900px) {
+  #title { font-size: 18px; }
+  #panel { width: 190px; font-size: 13px; }
+  .label { font-size: 11px; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  #hud {
+    top: 12px;
+    left: 12px;
+  }
+
+  #title {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  #panel {
+    width: 160px;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .label {
+    font-size: 10px;
+    padding: 3px 7px;
+  }
+
+  #loading {
+    font-size: 16px;
+    padding: 20px;
+    text-align: center;
+  }
 }
