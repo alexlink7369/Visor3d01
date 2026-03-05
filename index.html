@@ -79,6 +79,7 @@ const mouse = new THREE.Vector2();
 
 let objetos = [];
 let labels = [];
+let objetoSeleccionado = null;
 
 const params = new URLSearchParams(window.location.search);
 const objetoQR = params.get("objeto");
@@ -131,13 +132,15 @@ fetch("modelo.glb")
         color: colorElegido,
         metalness: 0.15,
         roughness: 0.55,
+        transparent: true,
+        opacity: 1.0,
       });
 
           objetos.push(child);
           crearLabel(child);
 
-          if (objetoQR && child.name.toLowerCase().includes(objetoQR)) {
-            seleccionarObjeto(child);
+          if (objetoQR && child.name.toLowerCase().includes(objetoQR.toLowerCase())) {
+            setTimeout(() => seleccionarObjeto(child), 100);
           }
         }
 
@@ -195,13 +198,8 @@ label.elemento.style.display = pos.z > 1 ? "none" : "block";
 
 function seleccionarObjeto(objeto){
 
-objetos.forEach(o=>{
-  const mats = Array.isArray(o.material) ? o.material : [o.material];
-  mats.forEach(m => { if(m.emissive) m.emissive.set(0x000000); });
-});
-
-const mats = Array.isArray(objeto.material) ? objeto.material : [objeto.material];
-mats.forEach(m => { if(m.emissive) m.emissive.set(0x333333); });
+objetoSeleccionado = objeto;
+actualizarApariencia();
 
 const worldPos = new THREE.Vector3();
 objeto.getWorldPosition(worldPos);
@@ -209,6 +207,20 @@ controls.target.copy(worldPos);
 
 document.getElementById("panel").innerHTML="<b>Objeto:</b> "+(objeto.name||"sin nombre");
 
+}
+
+function actualizarApariencia(){
+  objetos.forEach(o => {
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    const esSeleccionado = (o === objetoSeleccionado);
+    mats.forEach(m => {
+      m.transparent = true;
+      m.opacity       = esSeleccionado ? 1.0 : 0.15;
+      m.depthWrite    = esSeleccionado;
+      if (m.emissive) m.emissive.set(esSeleccionado ? 0x111111 : 0x000000);
+      m.needsUpdate   = true;
+    });
+  });
 }
 
 window.addEventListener("mousemove",(event)=>{
@@ -220,15 +232,21 @@ raycaster.setFromCamera(mouse,camera);
 
 const intersects=raycaster.intersectObjects(objetos);
 
-objetos.forEach(o=>{
-  const mats = Array.isArray(o.material) ? o.material : [o.material];
-  mats.forEach(m => { if(m.emissive) m.emissive.set(0x000000); });
-});
-
+// hover: solo resalta si no es el seleccionado
 if(intersects.length>0){
   const obj=intersects[0].object;
-  const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-  mats.forEach(m => { if(m.emissive) m.emissive.set(0x222222); });
+  if(obj !== objetoSeleccionado){
+    const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+    mats.forEach(m => { if(m.emissive) m.emissive.set(0x111111); });
+  }
+} else {
+  // quitar hover de objetos no seleccionados
+  objetos.forEach(o=>{
+    if(o !== objetoSeleccionado){
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      mats.forEach(m => { if(m.emissive) m.emissive.set(0x000000); });
+    }
+  });
 }
 
 });
@@ -269,3 +287,4 @@ animate();
 
 </body>
 </html>
+
