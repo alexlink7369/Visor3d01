@@ -89,11 +89,7 @@
   overflow: hidden;
 }
 
-#sidebar-icon {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 4px;
-}
+
 #sidebar-name {
   font-family: Arial, sans-serif;
   font-size: 1.5rem;
@@ -194,7 +190,6 @@
     padding-bottom: 0;
   }
 
-  #sidebar-icon  { font-size: 2.2rem; }
   #sidebar-name  { font-size: 1.2rem; }
   #sidebar-desc  { font-size: 0.85rem; }
   .prop-row      { font-size: 0.78rem; }
@@ -231,7 +226,6 @@ Cargando modelo...
     <button id="sidebar-close" title="Cerrar">✕</button>
   </div>
   <div id="sidebar-content">
-    <div id="sidebar-icon"></div>
     <h2 id="sidebar-name"></h2>
     <div id="sidebar-badge"></div>
     <p id="sidebar-desc"></p>
@@ -402,6 +396,7 @@ label.elemento.style.display = pos.z > 1 ? "none" : "block";
 // ── Datos de cada objeto ──────────────────────────────────────────
 const datosObjetos = {
   sphere: {
+    icono: "🔵",
     nombre: "Esfera",
     color: "#4FC3F7",
     descripcion: "Una esfera perfecta que representa la simetría tridimensional. Cada punto de su superficie equidista exactamente del centro, lo que la convierte en una de las formas más fundamentales de la geometría.",
@@ -413,6 +408,7 @@ const datosObjetos = {
     ]
   },
   teapot: {
+    icono: "🟠",
     nombre: "Tetera",
     color: "#FF8A65",
     descripcion: "La icónica Utah Teapot, uno de los modelos 3D más famosos en la historia de los gráficos por computadora. Fue digitalizada por Martin Newell en 1975 y se convirtió en el modelo de prueba estándar de la industria.",
@@ -424,6 +420,7 @@ const datosObjetos = {
     ]
   },
   box: {
+    icono: "🟢",
     nombre: "Caja",
     color: "#81C784",
     descripcion: "Un cubo o caja rectangular, el poliedro más básico y versátil del modelado 3D. Sus 6 caras, 12 aristas y 8 vértices lo convierten en el punto de partida de innumerables modelos en la industria.",
@@ -451,14 +448,12 @@ function abrirSidebar(objeto) {
   const datos = clave ? datosObjetos[clave] : null;
 
   const sidebar  = document.getElementById("sidebar");
-  const iconEl   = document.getElementById("sidebar-icon");
   const nameEl   = document.getElementById("sidebar-name");
   const badgeEl  = document.getElementById("sidebar-badge");
   const descEl   = document.getElementById("sidebar-desc");
   const propsEl  = document.getElementById("sidebar-props");
 
   if (datos) {
-    iconEl.textContent  = datos.icono;
     nameEl.textContent  = datos.nombre;
     badgeEl.textContent = objeto.name;
     badgeEl.style.background = datos.color + "33";
@@ -472,7 +467,6 @@ function abrirSidebar(objeto) {
        </div>`
     ).join("");
   } else {
-    iconEl.textContent  = "📦";
     nameEl.textContent  = objeto.name || "Objeto";
     badgeEl.textContent = "";
     descEl.textContent  = "Sin descripción disponible.";
